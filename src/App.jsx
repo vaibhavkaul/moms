@@ -268,7 +268,10 @@ function GeneratingStep({ statusData, onPanelClick }) {
         </div>
       )}
 
-      <p className="gen-note">This usually takes 2–3 minutes. Don't close this tab!</p>
+      <p className="gen-note">
+        This takes 2–3 minutes.
+        <strong> Bookmark this page</strong> — if you close the tab you can come back to it later.
+      </p>
     </div>
   )
 }
@@ -401,22 +404,35 @@ function Lightbox({ url, onClose }) {
 export default function App() {
   const [step, setStep] = useState('photos')
 
-  // Check for shared comic URL on mount
+  // Resume from URL on mount (?comic=<job_id>)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const sharedJobId = params.get('comic')
     if (!sharedJobId) return
+
+    setJobId(sharedJobId)
     setStep('generating')
+
     fetch(`${API_BASE}/api/comic-status/${sharedJobId}`)
       .then(r => r.json())
       .then(data => {
+        setStatusData(data)
         if (data.status === 'done') {
-          setStatusData(data)
           setStep('result')
+        } else if (data.status === 'error') {
+          setErrorMsg(data.error ?? 'Generation failed')
+          setStep('photos')
+          window.history.replaceState({}, '', window.location.pathname)
+        } else {
+          // still processing — start polling
+          pollRef.current = setInterval(() => pollStatus(sharedJobId), POLL_MS)
         }
       })
-      .catch(() => {}) // silently fall through to normal flow
-  }, [])
+      .catch(() => {
+        setStep('photos')
+        window.history.replaceState({}, '', window.location.pathname)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Photos
   const [momFile,      setMomFile]      = useState(null)
@@ -503,6 +519,7 @@ export default function App() {
       }
       const { job_id } = await res.json()
       setJobId(job_id)
+      window.history.pushState({}, '', `?comic=${job_id}`)
       pollRef.current = setInterval(() => pollStatus(job_id), POLL_MS)
       pollStatus(job_id)
     } catch (e) {
@@ -515,7 +532,9 @@ export default function App() {
     stopPolling()
     if (momPreview)   URL.revokeObjectURL(momPreview)
     if (childPreview) URL.revokeObjectURL(childPreview)
+    window.history.replaceState({}, '', window.location.pathname)
     setStep('photos')
+    setJobId(null)
     setMomFile(null);    setMomPreview(null)
     setChildFile(null);  setChildPreview(null)
     setMomName('');      setChildName('')

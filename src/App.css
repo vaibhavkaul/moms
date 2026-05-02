@@ -392,6 +392,16 @@
 .style-label { font-size: 0.82rem; font-weight: 700; color: var(--text); }
 .style-sub   { font-size: 0.65rem; color: var(--text-2); }
 
+.style-chip--highlight {
+  border-color: var(--purple);
+  background: linear-gradient(135deg, rgba(156,39,176,0.06), rgba(233,30,140,0.06));
+}
+.style-chip--highlight .style-label { color: var(--purple); }
+.style-chip--highlight.style-chip--selected {
+  border-color: var(--purple);
+  background: linear-gradient(135deg, rgba(156,39,176,0.15), rgba(233,30,140,0.15));
+}
+
 /* ── Error ─────────────────────────────────────────────────── */
 .error-msg {
   font-size: 0.88rem;

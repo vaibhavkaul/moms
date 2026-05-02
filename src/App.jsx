@@ -52,11 +52,10 @@ const TEMPLATES = [
 ]
 
 const STYLES = [
-  { id: 'cartoon',   label: 'Cartoon',     sub: 'Bold & vibrant' },
-  { id: 'storybook', label: 'Storybook',   sub: 'Soft watercolour' },
-  { id: 'manga',     label: 'Manga',       sub: 'Anime style' },
-  { id: 'vintage',   label: 'Vintage',     sub: 'Retro comic' },
-  { id: 'cinematic', label: '🎬 Live Action', sub: 'Photorealistic', highlight: true },
+  { id: 'cartoon',   label: 'Cartoon',   sub: 'Bold & vibrant' },
+  { id: 'storybook', label: 'Storybook', sub: 'Soft watercolour' },
+  { id: 'manga',     label: 'Manga',     sub: 'Anime style' },
+  { id: 'vintage',   label: 'Vintage',   sub: 'Retro comic' },
 ]
 
 // ── Helper ───────────────────────────────────────────────────────────────────
@@ -195,7 +194,7 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
           {STYLES.map(s => (
             <button
               key={s.id}
-              className={`style-chip ${style === s.id ? 'style-chip--selected' : ''} ${s.highlight ? 'style-chip--highlight' : ''}`}
+              className={`style-chip ${style === s.id ? 'style-chip--selected' : ''}`}
               onClick={() => setStyle(s.id)}
               type="button"
             >

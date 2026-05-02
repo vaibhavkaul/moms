@@ -275,8 +275,17 @@ function GeneratingStep({ statusData, onPanelClick }) {
 
 // ── Step: Result ──────────────────────────────────────────────────────────────
 
-function ResultStep({ statusData, momName, childName, onReset, onPanelClick }) {
+function ResultStep({ statusData, momName, childName, onReset, onPanelClick, jobId }) {
   const panels = statusData.panels ?? []
+  const [copied, setCopied] = useState(false)
+
+  function shareComic() {
+    const url = `${window.location.origin}${window.location.pathname}?comic=${jobId}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    })
+  }
 
   async function downloadPanel(url, n, e) {
     e.stopPropagation()
@@ -333,7 +342,12 @@ return (
       </div>
 
       <div className="result-actions">
-<button className="primary-btn" onClick={onReset}>💝 Make Another</button>
+        {jobId && (
+          <button className="ghost-btn" onClick={shareComic}>
+            {copied ? '✓ Copied!' : '🔗 Share'}
+          </button>
+        )}
+        <button className="primary-btn" onClick={onReset}>💝 Make Another</button>
       </div>
     </div>
   )
@@ -387,6 +401,23 @@ function Lightbox({ url, onClose }) {
 export default function App() {
   const [step, setStep] = useState('photos')
 
+  // Check for shared comic URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const sharedJobId = params.get('comic')
+    if (!sharedJobId) return
+    setStep('generating')
+    fetch(`${API_BASE}/api/comic-status/${sharedJobId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'done') {
+          setStatusData(data)
+          setStep('result')
+        }
+      })
+      .catch(() => {}) // silently fall through to normal flow
+  }, [])
+
   // Photos
   const [momFile,      setMomFile]      = useState(null)
   const [momPreview,   setMomPreview]   = useState(null)
@@ -401,6 +432,7 @@ export default function App() {
   const [style,       setStyle]       = useState('cartoon')
 
   // Generation
+  const [jobId,       setJobId]       = useState(null)
   const [statusData,  setStatusData]  = useState({})
   const [errorMsg,    setErrorMsg]    = useState(null)
   const [lightboxUrl, setLightboxUrl] = useState(null)
@@ -470,6 +502,7 @@ export default function App() {
         throw new Error(err.detail ?? 'Unknown error')
       }
       const { job_id } = await res.json()
+      setJobId(job_id)
       pollRef.current = setInterval(() => pollStatus(job_id), POLL_MS)
       pollStatus(job_id)
     } catch (e) {
@@ -537,6 +570,7 @@ export default function App() {
             childName={childName || 'Child'}
             onReset={handleReset}
             onPanelClick={setLightboxUrl}
+            jobId={jobId}
           />
         )}
       </main>

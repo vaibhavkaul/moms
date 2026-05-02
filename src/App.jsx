@@ -327,7 +327,6 @@ return (
       </div>
 
       <div className="result-actions">
-        <button className="ghost-btn" onClick={() => window.print()}>🖨️ Print</button>
 <button className="primary-btn" onClick={onReset}>💝 Make Another</button>
       </div>
     </div>

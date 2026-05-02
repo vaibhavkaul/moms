@@ -287,19 +287,7 @@ function ResultStep({ statusData, momName, childName, onReset, onPanelClick }) {
     a.click()
   }
 
-  function downloadAll() {
-    panels.forEach((p, i) => {
-      setTimeout(() => {
-        const a = document.createElement('a')
-        a.href = p.image_url
-        a.download = `mom-and-me-panel-${p.panel}.png`
-        a.target = '_blank'
-        a.click()
-      }, i * 400)
-    })
-  }
-
-  return (
+return (
     <div className="step-wrap result-wrap">
       <div className="result-header">
         <div className="result-title-row">
@@ -340,8 +328,7 @@ function ResultStep({ statusData, momName, childName, onReset, onPanelClick }) {
 
       <div className="result-actions">
         <button className="ghost-btn" onClick={() => window.print()}>🖨️ Print</button>
-        <button className="ghost-btn" onClick={downloadAll}>⬇️ Download All</button>
-        <button className="primary-btn" onClick={onReset}>💝 Make Another</button>
+<button className="primary-btn" onClick={onReset}>💝 Make Another</button>
       </div>
     </div>
   )

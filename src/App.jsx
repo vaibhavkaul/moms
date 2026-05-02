@@ -278,13 +278,19 @@ function GeneratingStep({ statusData, onPanelClick }) {
 function ResultStep({ statusData, momName, childName, onReset, onPanelClick }) {
   const panels = statusData.panels ?? []
 
-  function downloadPanel(url, n, e) {
+  async function downloadPanel(url, n, e) {
     e.stopPropagation()
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `mom-and-me-panel-${n}.png`
-    a.target = '_blank'
-    a.click()
+    try {
+      const blob = await fetch(url).then(r => r.blob())
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `mom-and-me-panel-${n}.png`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch {
+      // fallback: open in new tab
+      window.open(url, '_blank')
+    }
   }
 
 return (

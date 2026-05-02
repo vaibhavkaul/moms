@@ -34,16 +34,23 @@
 /* ── Step bar ──────────────────────────────────────────────── */
 .step-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 0;
-  padding: 16px 0 4px;
+  padding: 16px 0 24px;
 }
 
-.step-dot-wrap {
+/* wrapper holds one dot+label column + the connector line after it */
+.step-item-wrap {
   display: flex;
+  align-items: flex-start;
+}
+
+/* the dot + label column */
+.step-item {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0;
+  gap: 6px;
 }
 
 .step-dot {
@@ -63,27 +70,21 @@
 }
 
 .step-dot-label {
-  position: absolute;
-  top: calc(100% + 4px);
   font-size: 0.65rem;
   color: var(--text-2);
   white-space: nowrap;
 }
 
-.step-dot-wrap {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-
+/* horizontal connector between items — vertically centred on the dot */
 .step-connector {
-  width: 40px;
+  width: 36px;
   height: 2px;
   background: var(--border);
-  margin-bottom: 18px;
+  margin-top: 15px;   /* (32px dot height / 2) - (2px line / 2) = 15px */
+  flex-shrink: 0;
+  transition: background 0.2s;
 }
+.step-connector--done { background: var(--pink-mid); }
 
 .step-current .step-dot {
   background: linear-gradient(135deg, var(--pink), var(--purple));
@@ -91,7 +92,6 @@
   color: #fff;
   box-shadow: 0 0 0 4px var(--pink-light);
 }
-
 .step-current .step-dot-label {
   color: var(--pink);
   font-weight: 700;
@@ -590,9 +590,61 @@
   display: flex;
   gap: 10px;
   align-items: stretch;
+  flex-wrap: wrap;
 }
 .result-actions .ghost-btn { white-space: nowrap; }
-.result-actions .primary-btn { flex: 1; }
+.result-actions .primary-btn { flex: 1; min-width: 140px; }
+
+/* ── Lightbox ──────────────────────────────────────────────── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease;
+}
+
+.lightbox-inner {
+  position: relative;
+  max-width: min(92vw, 680px);
+  max-height: 90dvh;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+
+.lightbox-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 90dvh;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s, transform 0.1s;
+}
+.lightbox-close:hover  { background: rgba(0,0,0,0.8); }
+.lightbox-close:active { transform: scale(0.9); }
+
+/* comic panel clickable cursor */
+.comic-panel { cursor: zoom-in; }
 
 /* ── Animations ────────────────────────────────────────────── */
 @keyframes fadeIn {

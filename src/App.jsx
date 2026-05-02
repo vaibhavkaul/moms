@@ -266,15 +266,28 @@ function GeneratingStep({ statusData }) {
 
 // ── Step: Result ──────────────────────────────────────────────────────────────
 
-function ResultStep({ statusData, momName, childName, onReset }) {
+function ResultStep({ statusData, momName, childName, onReset, onPanelClick }) {
   const panels = statusData.panels ?? []
 
-  function downloadPanel(url, n) {
+  function downloadPanel(url, n, e) {
+    e.stopPropagation()
     const a = document.createElement('a')
     a.href = url
     a.download = `mom-and-me-panel-${n}.png`
     a.target = '_blank'
     a.click()
+  }
+
+  function downloadAll() {
+    panels.forEach((p, i) => {
+      setTimeout(() => {
+        const a = document.createElement('a')
+        a.href = p.image_url
+        a.download = `mom-and-me-panel-${p.panel}.png`
+        a.target = '_blank'
+        a.click()
+      }, i * 400)
+    })
   }
 
   return (
@@ -288,19 +301,26 @@ function ResultStep({ statusData, momName, childName, onReset }) {
           </h2>
           <span className="heart-icon">💝</span>
         </div>
-        <p className="result-sub">Your personalised comic book is ready!</p>
+        <p className="result-sub">Your personalised comic book is ready! Tap a panel to enlarge.</p>
       </div>
 
       <div className="comic-grid">
         {panels.map(p => (
-          <div key={p.panel} className="comic-panel">
+          <div
+            key={p.panel}
+            className="comic-panel"
+            onClick={() => onPanelClick(p.image_url)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && onPanelClick(p.image_url)}
+          >
             <img src={p.image_url} alt={`Panel ${p.panel}`} className="comic-panel-img" />
             {p.dialogue && (
               <div className="panel-caption">{p.dialogue}</div>
             )}
             <button
               className="panel-dl-btn"
-              onClick={() => downloadPanel(p.image_url, p.panel)}
+              onClick={(e) => downloadPanel(p.image_url, p.panel, e)}
               title="Download this panel"
             >
               ↓
@@ -310,12 +330,9 @@ function ResultStep({ statusData, momName, childName, onReset }) {
       </div>
 
       <div className="result-actions">
-        <button className="ghost-btn" onClick={() => window.print()}>
-          🖨️ Print
-        </button>
-        <button className="primary-btn" onClick={onReset}>
-          💝 Make Another
-        </button>
+        <button className="ghost-btn" onClick={() => window.print()}>🖨️ Print</button>
+        <button className="ghost-btn" onClick={downloadAll}>⬇️ Download All</button>
+        <button className="primary-btn" onClick={onReset}>💝 Make Another</button>
       </div>
     </div>
   )
@@ -331,16 +348,36 @@ function StepBar({ step }) {
   return (
     <nav className="step-bar" aria-label="Progress">
       {STEP_LABELS.map((label, i) => (
-        <div
-          key={label}
-          className={`step-dot-wrap ${i < current ? 'step-past' : ''} ${i === current ? 'step-current' : ''}`}
-        >
-          <div className="step-dot">{i < current ? '✓' : i + 1}</div>
-          <span className="step-dot-label">{label}</span>
-          {i < STEP_LABELS.length - 1 && <div className="step-connector" />}
+        <div key={label} className="step-item-wrap">
+          <div className={`step-item ${i < current ? 'step-past' : ''} ${i === current ? 'step-current' : ''}`}>
+            <div className="step-dot">{i < current ? '✓' : i + 1}</div>
+            <span className="step-dot-label">{label}</span>
+          </div>
+          {i < STEP_LABELS.length - 1 && (
+            <div className={`step-connector ${i < current ? 'step-connector--done' : ''}`} />
+          )}
         </div>
       ))}
     </nav>
+  )
+}
+
+// ── Lightbox ─────────────────────────────────────────────────────────────────
+
+function Lightbox({ url, onClose }) {
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  return (
+    <div className="lightbox-overlay" onClick={onClose}>
+      <div className="lightbox-inner" onClick={e => e.stopPropagation()}>
+        <img src={url} alt="Comic panel" className="lightbox-img" />
+        <button className="lightbox-close" onClick={onClose} aria-label="Close">✕</button>
+      </div>
+    </div>
   )
 }
 
@@ -363,8 +400,9 @@ export default function App() {
   const [style,       setStyle]       = useState('cartoon')
 
   // Generation
-  const [statusData, setStatusData] = useState({})
-  const [errorMsg,   setErrorMsg]   = useState(null)
+  const [statusData,  setStatusData]  = useState({})
+  const [errorMsg,    setErrorMsg]    = useState(null)
+  const [lightboxUrl, setLightboxUrl] = useState(null)
   const pollRef  = useRef(null)
   const momRef   = useRef(null)
   const childRef = useRef(null)
@@ -497,6 +535,7 @@ export default function App() {
             momName={momName   || 'Mom'}
             childName={childName || 'Child'}
             onReset={handleReset}
+            onPanelClick={setLightboxUrl}
           />
         )}
       </main>
@@ -504,6 +543,10 @@ export default function App() {
       <footer className="app-footer">
         Made with 💝 for Mother's Day
       </footer>
+
+      {lightboxUrl && (
+        <Lightbox url={lightboxUrl} onClose={() => setLightboxUrl(null)} />
+      )}
     </div>
   )
 }

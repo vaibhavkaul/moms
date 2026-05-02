@@ -220,7 +220,7 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
 
 // ── Step: Generating ──────────────────────────────────────────────────────────
 
-function GeneratingStep({ statusData }) {
+function GeneratingStep({ statusData, onPanelClick }) {
   const panels      = statusData.panels ?? []
   const panelsDone  = statusData.panels_done ?? 0
   const panelsTotal = statusData.panels_total ?? 6
@@ -246,7 +246,15 @@ function GeneratingStep({ statusData }) {
       {panels.length > 0 && (
         <div className="panel-preview-grid">
           {panels.map(p => (
-            <div key={p.panel} className="panel-thumb panel-thumb--loaded">
+            <div
+              key={p.panel}
+              className="panel-thumb panel-thumb--loaded"
+              onClick={() => onPanelClick(p.image_url)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && onPanelClick(p.image_url)}
+              title="Tap to enlarge"
+            >
               <img src={p.image_url} alt={`Panel ${p.panel}`} />
             </div>
           ))}
@@ -528,7 +536,7 @@ export default function App() {
           />
         )}
         {step === 'generating' && (
-          <GeneratingStep statusData={statusData} />
+          <GeneratingStep statusData={statusData} onPanelClick={setLightboxUrl} />
         )}
         {step === 'result' && (
           <ResultStep

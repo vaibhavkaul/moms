@@ -318,20 +318,10 @@ return (
         <p className="result-sub">Your personalised comic book is ready! Tap a panel to enlarge.</p>
       </div>
 
-      <div className="comic-grid">
+      <div className="comic-scroll">
         {panels.map(p => (
-          <div
-            key={p.panel}
-            className="comic-panel"
-            onClick={() => onPanelClick(p.image_url)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && onPanelClick(p.image_url)}
-          >
+          <div key={p.panel} className="comic-panel">
             <img src={p.image_url} alt={`Panel ${p.panel}`} className="comic-panel-img" />
-            {p.dialogue && (
-              <div className="panel-caption">{p.dialogue}</div>
-            )}
             <button
               className="panel-dl-btn"
               onClick={(e) => downloadPanel(p.image_url, p.panel, e)}

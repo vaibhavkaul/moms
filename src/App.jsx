@@ -153,10 +153,14 @@ const BOOK_TEMPLATES = [
 ]
 
 const STYLES = [
-  { id: 'cartoon',   label: 'Cartoon',   sub: 'Bold & vibrant' },
-  { id: 'storybook', label: 'Storybook', sub: 'Soft watercolour' },
-  { id: 'manga',     label: 'Manga',     sub: 'Anime style' },
-  { id: 'vintage',   label: 'Vintage',   sub: 'Retro comic' },
+  { id: 'cartoon',     emoji: '🎨', label: 'Cartoon',        sub: 'Bold outlines & vivid flat colour' },
+  { id: 'watercolour', emoji: '💧', label: 'Watercolour',    sub: 'Soft, dreamy painterly washes' },
+  { id: 'manga',       emoji: '⚡', label: 'Manga',           sub: 'Expressive anime & ink lines' },
+  { id: 'vintage',     emoji: '📰', label: 'Vintage Comics',  sub: 'Retro newsprint & halftone dots' },
+  { id: 'sketch',      emoji: '✏️', label: 'Pencil Sketch',   sub: 'Loose hand-drawn ink style' },
+  { id: 'cinematic',   emoji: '🎞️', label: 'Cinematic',       sub: 'Rich 3D-rendered, Pixar feel' },
+  { id: 'collage',     emoji: '✂️', label: 'Collage',         sub: 'Bold cut-paper shapes & texture' },
+  { id: 'whimsical',   emoji: '🌀', label: 'Whimsical',       sub: 'Curved & impossible, Dr. Seuss-like' },
 ]
 
 const TEMPLATE_SOURCE = {
@@ -275,7 +279,7 @@ function PhotosStep({ momPreview, momFile, childPreview, childFile, childName,
 // ── Step: Story ───────────────────────────────────────────────────────────────
 
 function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
-                      style, setStyle, errorMsg, onBack, onGenerate, canGenerate }) {
+                      errorMsg, onBack, onNext, canNext }) {
   const getInitialCategory = () => {
     if (!template || template === 'custom') return 'movies'
     if (MOVIE_TEMPLATES.some(t => t.id === template)) return 'movies'
@@ -345,28 +349,48 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
         />
       )}
 
-      <div className="card mt-12">
-        <p className="field-label">Art style</p>
-        <div className="style-row">
-          {STYLES.map(s => (
-            <button
-              key={s.id}
-              className={`style-chip ${style === s.id ? 'style-chip--selected' : ''}`}
-              onClick={() => setStyle(s.id)}
-              type="button"
-            >
-              <span className="style-label">{s.label}</span>
-              <span className="style-sub">{s.sub}</span>
-            </button>
-          ))}
-        </div>
+      {errorMsg && <p className="error-msg mt-12">{errorMsg}</p>}
+
+      <div className="btn-row mt-12">
+        <button className="ghost-btn" onClick={onBack}>← Back</button>
+        <button className="primary-btn primary-btn--wide" disabled={!canNext} onClick={onNext}>
+          Choose Style →
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Step: Style ───────────────────────────────────────────────────────────────
+
+function StyleStep({ style, setStyle, errorMsg, onBack, onGenerate }) {
+  return (
+    <div className="step-wrap">
+      <div className="step-header">
+        <h2>Pick your art style</h2>
+        <p className="step-sub">This sets the look of every panel in your comic</p>
+      </div>
+
+      <div className="style-grid">
+        {STYLES.map(s => (
+          <button
+            key={s.id}
+            className={`style-card ${style === s.id ? 'style-card--selected' : ''}`}
+            onClick={() => setStyle(s.id)}
+            type="button"
+          >
+            <span className="style-card-emoji">{s.emoji}</span>
+            <span className="style-card-label">{s.label}</span>
+            <span className="style-card-sub">{s.sub}</span>
+          </button>
+        ))}
       </div>
 
       {errorMsg && <p className="error-msg mt-12">{errorMsg}</p>}
 
       <div className="btn-row mt-12">
         <button className="ghost-btn" onClick={onBack}>← Back</button>
-        <button className="primary-btn primary-btn--wide" disabled={!canGenerate} onClick={onGenerate}>
+        <button className="primary-btn primary-btn--wide" onClick={onGenerate}>
           ✨ Create Comic
         </button>
       </div>
@@ -504,8 +528,8 @@ return (
 
 // ── Step indicator ────────────────────────────────────────────────────────────
 
-const STEP_LABELS = ['Photos', 'Story', 'Create', 'Done']
-const STEP_INDEX  = { photos: 0, story: 1, generating: 2, result: 3 }
+const STEP_LABELS = ['Photos', 'Story', 'Style', 'Create', 'Done']
+const STEP_INDEX  = { photos: 0, story: 1, style: 2, generating: 3, result: 4 }
 
 function StepBar({ step }) {
   const current = STEP_INDEX[step] ?? 0
@@ -633,12 +657,12 @@ export default function App() {
       } else if (data.status === 'error') {
         stopPolling()
         setErrorMsg(data.error ?? 'Generation failed — please try again')
-        setStep('story')
+        setStep('style')
       }
     } catch (e) {
       stopPolling()
       setErrorMsg(e.message)
-      setStep('story')
+      setStep('style')
     }
   }
 
@@ -670,7 +694,7 @@ export default function App() {
       pollStatus(job_id)
     } catch (e) {
       setErrorMsg(e.message)
-      setStep('story')
+      setStep('style')
     }
   }
 
@@ -689,7 +713,7 @@ export default function App() {
   }
 
   const canGoToStory = !!(momFile && childFile)
-  const canGenerate  = !!(template && (template !== 'custom' || customNotes.trim()))
+  const canGoToStyle = !!(template && (template !== 'custom' || customNotes.trim()))
 
   return (
     <div className="app">
@@ -718,11 +742,18 @@ export default function App() {
           <StoryStep
             template={template}         setTemplate={setTemplate}
             customNotes={customNotes}   setCustomNotes={setCustomNotes}
-            style={style}               setStyle={setStyle}
             errorMsg={errorMsg}
             onBack={() => setStep('photos')}
+            onNext={() => { setErrorMsg(null); setStep('style') }}
+            canNext={canGoToStyle}
+          />
+        )}
+        {step === 'style' && (
+          <StyleStep
+            style={style}       setStyle={setStyle}
+            errorMsg={errorMsg}
+            onBack={() => setStep('story')}
             onGenerate={handleGenerate}
-            canGenerate={canGenerate}
           />
         )}
         {step === 'generating' && (

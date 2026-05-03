@@ -394,34 +394,35 @@
 .custom-textarea:focus { border-color: var(--pink); }
 .custom-textarea::placeholder { color: #bca0c6; }
 
-/* ── Style chips ───────────────────────────────────────────── */
-.style-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+/* ── Style grid ────────────────────────────────────────────── */
+.style-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.style-chip {
-  flex: 1;
-  min-width: 80px;
+.style-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 10px 6px;
-  border-radius: 12px;
+  gap: 6px;
+  padding: 22px 12px;
+  border-radius: 18px;
   border: 2px solid var(--border);
-  background: var(--bg);
+  background: var(--card);
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  text-align: center;
 }
-.style-chip:active { transform: scale(0.96); }
-.style-chip--selected {
+.style-card:active { transform: scale(0.96); }
+.style-card--selected {
   border-color: var(--pink);
   background: var(--pink-light);
+  box-shadow: 0 0 0 3px rgba(233,30,140,0.15);
 }
-.style-label { font-size: 0.82rem; font-weight: 700; color: var(--text); }
-.style-sub   { font-size: 0.65rem; color: var(--text-2); }
+.style-card-emoji { font-size: 2rem; }
+.style-card-label { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+.style-card-sub   { font-size: 0.7rem; color: var(--text-2); }
 
 /* ── Error ─────────────────────────────────────────────────── */
 .error-msg {

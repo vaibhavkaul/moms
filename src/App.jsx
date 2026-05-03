@@ -538,7 +538,7 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <div className="app-logo">💝 Mom &amp; Me Comics</div>
-        <p className="app-tagline">A personalised Mother's Day comic book — starring you!</p>
+        <p className="app-tagline">A personalised Mother's Day comic book — starring the mom and her child!</p>
       </header>
 
       <StepBar step={step} />

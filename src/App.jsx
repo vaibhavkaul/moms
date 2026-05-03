@@ -152,15 +152,16 @@ const BOOK_TEMPLATES = [
   },
 ]
 
+const CDN = 'https://moms.kidsartto.life/samples'
 const STYLES = [
-  { id: 'cartoon',     emoji: '🎨', label: 'Cartoon',        sub: 'Bold outlines & vivid flat colour' },
-  { id: 'watercolour', emoji: '💧', label: 'Watercolour',    sub: 'Soft, dreamy painterly washes' },
-  { id: 'manga',       emoji: '⚡', label: 'Manga',           sub: 'Expressive anime & ink lines' },
-  { id: 'vintage',     emoji: '📰', label: 'Vintage Comics',  sub: 'Retro newsprint & halftone dots' },
-  { id: 'sketch',      emoji: '✏️', label: 'Pencil Sketch',   sub: 'Loose hand-drawn ink style' },
-  { id: 'cinematic',   emoji: '🎞️', label: 'Cinematic',       sub: 'Rich 3D-rendered, Pixar feel' },
-  { id: 'collage',     emoji: '✂️', label: 'Collage',         sub: 'Bold cut-paper shapes & texture' },
-  { id: 'whimsical',   emoji: '🌀', label: 'Whimsical',       sub: 'Curved & impossible, Dr. Seuss-like' },
+  { id: 'cartoon',     label: 'Cartoon',       sub: 'Bold outlines & vivid flat colour',       sample: `${CDN}/style-cartoon.png` },
+  { id: 'watercolour', label: 'Watercolour',   sub: 'Soft, dreamy painterly washes',           sample: `${CDN}/style-watercolour.png` },
+  { id: 'manga',       label: 'Manga',          sub: 'Expressive anime & ink lines',            sample: `${CDN}/style-manga.png` },
+  { id: 'vintage',     label: 'Vintage Comics', sub: 'Retro newsprint & halftone dots',         sample: `${CDN}/style-vintage.png` },
+  { id: 'sketch',      label: 'Pencil Sketch',  sub: 'Loose hand-drawn ink style',              sample: `${CDN}/style-sketch.png` },
+  { id: 'cinematic',   label: 'Cinematic',      sub: 'Rich 3D-rendered, Pixar feel',            sample: `${CDN}/style-cinematic.png` },
+  { id: 'collage',     label: 'Collage',        sub: 'Bold cut-paper shapes & texture',         sample: `${CDN}/style-collage.png` },
+  { id: 'whimsical',   label: 'Whimsical',      sub: 'Curved & impossible, Dr. Seuss-like',     sample: `${CDN}/style-whimsical.png` },
 ]
 
 const TEMPLATE_SOURCE = {
@@ -379,7 +380,10 @@ function StyleStep({ style, setStyle, errorMsg, onBack, onGenerate }) {
             onClick={() => setStyle(s.id)}
             type="button"
           >
-            <span className="style-card-emoji">{s.emoji}</span>
+            <div className="style-card-img-wrap">
+              <img src={s.sample} alt={s.label} className="style-card-img" loading="lazy" />
+              {style === s.id && <div className="style-card-check">✓</div>}
+            </div>
             <span className="style-card-label">{s.label}</span>
             <span className="style-card-sub">{s.sub}</span>
           </button>

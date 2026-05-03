@@ -159,6 +159,29 @@ const STYLES = [
   { id: 'vintage',   label: 'Vintage',   sub: 'Retro comic' },
 ]
 
+const TEMPLATE_SOURCE = {
+  lion_king:          'The Lion King',
+  frozen:             'Frozen',
+  brave:              'Brave',
+  finding_nemo:       'Finding Nemo',
+  encanto:            'Encanto',
+  moana:              'Moana',
+  inside_out:         'Inside Out',
+  tangled:            'Tangled',
+  little_mermaid:     'The Little Mermaid',
+  toy_story:          'Toy Story',
+  goodnight_moon:     'Goodnight Moon',
+  hungry_caterpillar: 'The Very Hungry Caterpillar',
+  winnie_pooh:        'Winnie-the-Pooh',
+  wild_things:        'Where the Wild Things Are',
+  matilda:            'Matilda',
+  cat_in_hat:         'The Cat in the Hat',
+  giving_tree:        'The Giving Tree',
+  gruffalo:           'The Gruffalo',
+  charlottes_web:     "Charlotte's Web",
+  narnia:             'The Lion, the Witch and the Wardrobe',
+}
+
 // ── Helper ───────────────────────────────────────────────────────────────────
 
 function isHeic(file) {
@@ -306,6 +329,9 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
               <span className="tmpl-emoji">{t.emoji}</span>
               <span className="tmpl-title">{t.title}</span>
               <span className="tmpl-sub">{t.sub}</span>
+              {TEMPLATE_SOURCE[t.id] && (
+                <span className="tmpl-source">inspired by {TEMPLATE_SOURCE[t.id]}</span>
+              )}
             </button>
           ))}
         </div>

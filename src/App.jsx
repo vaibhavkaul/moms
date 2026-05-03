@@ -6,48 +6,149 @@ const POLL_MS = 4000
 
 // ── Static data ──────────────────────────────────────────────────────────────
 
-const TEMPLATES = [
+const MOVIE_TEMPLATES = [
   {
-    id: 'brave',
-    emoji: '🌲',
-    title: 'Brave Adventure',
-    sub: 'Enchanted forest quest',
-    seed: "Mom and child journey through an enchanted forest, facing magical challenges together. Their bond and bravery help them overcome every obstacle in a heartwarming Mother's Day adventure.",
+    id: 'lion_king',
+    emoji: '🦁',
+    title: 'The Lion King',
+    sub: 'Pride Lands adventure',
+    seed: "Mom and child explore the majestic Pride Lands, learn about the Circle of Life from wise Rafiki, sing with Timon and Pumbaa, and discover that true courage comes from the love between a parent and child.",
   },
   {
-    id: 'superhero',
-    emoji: '🦸‍♀️',
-    title: 'Super Mom',
-    sub: 'She has secret superpowers',
-    seed: "Mom reveals her secret superhero powers to her child. Together they team up on an exciting mission to help their community, proving that moms are the greatest heroes of all.",
+    id: 'frozen',
+    emoji: '❄️',
+    title: 'Frozen',
+    sub: 'Into the ice kingdom',
+    seed: "A magical eternal winter blankets the kingdom! Mom and child journey through snow-dusted forests and ice palaces, meet Olaf the snowman, and discover that love is the most powerful magic of all.",
+  },
+  {
+    id: 'brave',
+    emoji: '🏹',
+    title: 'Brave',
+    sub: 'Scottish highland quest',
+    seed: "In a misty Scottish kingdom, mom and child follow glowing wisps through ancient forests and crumbling castles, solving a magical riddle and proving that the bravest thing of all is the love between them.",
+  },
+  {
+    id: 'finding_nemo',
+    emoji: '🐠',
+    title: 'Finding Nemo',
+    sub: 'Underwater rescue',
+    seed: "Mom and child dive into the dazzling Great Barrier Reef, ride ocean currents with sea turtles, dodge playful sharks, and explore the deep blue — learning that no ocean is too wide when a parent's love is the compass.",
+  },
+  {
+    id: 'encanto',
+    emoji: '🪄',
+    title: 'Encanto',
+    sub: 'Magic family casita',
+    seed: "In a magical Casita full of living rooms and impossible staircases, mom and child discover their own extraordinary gifts, share arepas, and celebrate the miracle that is their family.",
   },
   {
     id: 'moana',
     emoji: '🌊',
-    title: 'Ocean Voyage',
+    title: 'Moana',
     sub: 'Sailing magical seas',
-    seed: "Mom and child sail across a beautiful magical ocean on an adventure canoe, discovering colourful islands, friendly sea creatures, and the true meaning of love and family.",
+    seed: "Guided by the ocean itself, mom and child sail across glittering seas in a voyager canoe, befriend the demigod Maui, restore the heart of Te Fiti, and prove that the ocean loves the brave.",
   },
   {
-    id: 'space',
+    id: 'inside_out',
+    emoji: '🎭',
+    title: 'Inside Out',
+    sub: 'Emotion adventure',
+    seed: "Mom and child journey through the colourful islands of the mind — Joy's golden meadows, Sadness's quiet lakes — discovering that every feeling matters and love is the memory that never fades.",
+  },
+  {
+    id: 'tangled',
+    emoji: '🏮',
+    title: 'Tangled',
+    sub: 'Lantern festival night',
+    seed: "Long golden hair, a magical tower, and a sky full of glowing lanterns! Mom and child set out on a daring adventure through the kingdom, outsmart villains, and share the most beautiful night of their lives.",
+  },
+  {
+    id: 'little_mermaid',
+    emoji: '🧜‍♀️',
+    title: 'The Little Mermaid',
+    sub: 'Under the sea',
+    seed: "Mom and child dive into a shimmering underwater kingdom, collect sunken treasures, sing with Sebastian the crab, and discover that the most magical thing about the sea is coming home together.",
+  },
+  {
+    id: 'toy_story',
     emoji: '🚀',
-    title: 'Space Explorers',
-    sub: 'Cosmic adventures await',
-    seed: "Mom and child become astronauts together, exploring colourful planets and meeting friendly aliens, discovering that no matter how far they travel, home is wherever they are together.",
+    title: 'Toy Story',
+    sub: 'Toys come alive!',
+    seed: "When the lights go out, mom and child's favourite toys spring to life for a daring adventure across the bedroom and beyond — with Woody, Buzz Lightyear, and the whole gang proving that friendship and love save the day.",
+  },
+]
+
+const BOOK_TEMPLATES = [
+  {
+    id: 'goodnight_moon',
+    emoji: '🌙',
+    title: 'Goodnight Moon',
+    sub: 'Cosy bedtime magic',
+    seed: "As mom tucks child in for the night, each goodnight opens a door to a softly glowing magical world — moonlit meadows, sleepy stars, and gentle creatures — before the cosiest goodnight of all.",
   },
   {
-    id: 'garden',
-    emoji: '🌸',
-    title: 'Magical Garden',
-    sub: 'A fairy world in bloom',
-    seed: "Mom and child discover their backyard has become a magical garden where giant flowers open into fairy doors, butterflies speak, and a little love makes everything grow.",
+    id: 'hungry_caterpillar',
+    emoji: '🐛',
+    title: 'The Very Hungry Caterpillar',
+    sub: 'Colourful nature journey',
+    seed: "Mom and child follow a very hungry caterpillar through a world of giant fruit and colourful leaves, watching it grow and transform into a beautiful butterfly — a story about patience, wonder, and growing together.",
   },
   {
-    id: 'custom',
-    emoji: '✨',
-    title: 'Your Story',
-    sub: 'Write your own adventure',
-    seed: null,
+    id: 'winnie_pooh',
+    emoji: '🍯',
+    title: 'Winnie-the-Pooh',
+    sub: 'Hundred Acre Wood',
+    seed: "A golden afternoon in the Hundred Acre Wood! Mom and child join Pooh, Piglet, and Tigger for a gentle adventure — a honey hunt, a bouncing expedition, and the discovery that a best friend is the greatest adventure of all.",
+  },
+  {
+    id: 'wild_things',
+    emoji: '👑',
+    title: 'Where the Wild Things Are',
+    sub: 'Wild rumpus kingdom',
+    seed: "A magical boat carries the child to the land of Wild Things where they are crowned king and the wild rumpus begins — but when it ends, mom's love is the thing that sails them safely home.",
+  },
+  {
+    id: 'matilda',
+    emoji: '📚',
+    title: 'Matilda',
+    sub: 'Magical book adventures',
+    seed: "A clever child discovers they have extraordinary powers! Mom and child outsmart the horrible headmistress, levitate chalk, and turn the school library into a portal to every adventure ever written.",
+  },
+  {
+    id: 'cat_in_hat',
+    emoji: '🎩',
+    title: 'The Cat in the Hat',
+    sub: 'A very silly day',
+    seed: "On a cold wet day a tall striped cat arrives with a giant red bow — and suddenly nothing is ordinary! Mom and child tumble through impossible rooms, ride Thing One and Thing Two, and clean it all up just in time.",
+  },
+  {
+    id: 'giving_tree',
+    emoji: '🌳',
+    title: 'The Giving Tree',
+    sub: 'A love that grows',
+    seed: "A great apple tree loves a child with her whole heart — through every season, every age, every adventure — giving everything she has, just like a mom. A tender story of endless, unconditional love.",
+  },
+  {
+    id: 'gruffalo',
+    emoji: '🦊',
+    title: 'The Gruffalo',
+    sub: 'Deep dark wood',
+    seed: "Mom and child venture into the deep dark wood, outwitting a fox, an owl, and a snake with the tale of a terrifying imaginary creature — until the Gruffalo turns out to be very real indeed.",
+  },
+  {
+    id: 'charlottes_web',
+    emoji: '🕷️',
+    title: "Charlotte's Web",
+    sub: 'Friendship on the farm',
+    seed: "On a gentle farm, mom and child meet Wilbur the pig and Charlotte the spider, whose beautiful words weave a story about friendship so powerful that it echoes long after the last page.",
+  },
+  {
+    id: 'narnia',
+    emoji: '🦁',
+    title: 'The Lion, the Witch & the Wardrobe',
+    sub: 'Through the wardrobe',
+    seed: "Behind the coats in the old wardrobe lies a snow-covered kingdom! Mom and child step into Narnia, meet the great lion Aslan, defeat the White Witch, and are crowned rulers of a world born from pure imagination.",
   },
 ]
 
@@ -150,6 +251,28 @@ function PhotosStep({ momPreview, momFile, childPreview, childFile, childName,
 
 // ── Step: Story ───────────────────────────────────────────────────────────────
 
+function TemplateSection({ label, templates, selected, onSelect }) {
+  return (
+    <div className="story-section">
+      <p className="story-section-label">{label}</p>
+      <div className="template-grid">
+        {templates.map(t => (
+          <button
+            key={t.id}
+            className={`template-card ${selected === t.id ? 'template-card--selected' : ''}`}
+            onClick={() => onSelect(t.id)}
+            type="button"
+          >
+            <span className="tmpl-emoji">{t.emoji}</span>
+            <span className="tmpl-title">{t.title}</span>
+            <span className="tmpl-sub">{t.sub}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
                       style, setStyle, errorMsg, onBack, onGenerate, canGenerate }) {
   return (
@@ -159,36 +282,29 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
         <p className="step-sub">Choose a template or write your own</p>
       </div>
 
-      <div className="template-grid">
-        {TEMPLATES.map(t => (
-          <button
-            key={t.id}
-            className={`template-card ${template === t.id ? 'template-card--selected' : ''}`}
-            onClick={() => setTemplate(t.id)}
-            type="button"
-          >
-            <span className="tmpl-emoji">{t.emoji}</span>
-            <span className="tmpl-title">{t.title}</span>
-            <span className="tmpl-sub">{t.sub}</span>
-          </button>
-        ))}
-      </div>
+      <TemplateSection label="🎬 Disney Movies" templates={MOVIE_TEMPLATES} selected={template} onSelect={setTemplate} />
+      <TemplateSection label="📖 Children's Books" templates={BOOK_TEMPLATES} selected={template} onSelect={setTemplate} />
 
-      {template === 'custom' && (
-        <div className="card mt-12">
-          <label className="field-label" htmlFor="custom-notes">
-            Describe your adventure (a few bullet points or sentences)
-          </label>
+      <div className="story-section">
+        <p className="story-section-label">✨ Your Story</p>
+        <button
+          className={`template-card template-card--wide ${template === 'custom' ? 'template-card--selected' : ''}`}
+          onClick={() => setTemplate('custom')}
+          type="button"
+        >
+          <span className="tmpl-emoji">✨</span>
+          <span className="tmpl-title">Write your own adventure</span>
+        </button>
+        {template === 'custom' && (
           <textarea
-            id="custom-notes"
-            className="custom-textarea"
+            className="custom-textarea mt-12"
             placeholder="e.g. We go on a beach adventure, find a mermaid, and end with a big hug on the sand..."
             value={customNotes}
             onChange={e => setCustomNotes(e.target.value)}
             rows={4}
           />
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="card mt-12">
         <p className="field-label">Art style</p>
@@ -495,7 +611,8 @@ export default function App() {
     const fd = new FormData()
     fd.append('mom_photo',    momFile)
     fd.append('child_photo',  childFile)
-    fd.append('story_type',   template)
+    const tpl = [...MOVIE_TEMPLATES, ...BOOK_TEMPLATES].find(t => t.id === template)
+    fd.append('story_type',   tpl?.seed ?? template)
     fd.append('story_notes',  customNotes)
     fd.append('style',        style)
     fd.append('mom_name',     'Mom')

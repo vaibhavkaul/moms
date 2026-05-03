@@ -150,7 +150,7 @@
   box-shadow: var(--shadow);
 }
 
-.mt-12 { margin-top: 12px; }
+.mt-12 { margin-top: 12px; display: block; }
 
 /* ── Photo upload ──────────────────────────────────────────── */
 .photo-row {
@@ -301,6 +301,20 @@
   align-items: stretch;
 }
 
+/* ── Story sections ────────────────────────────────────────── */
+.story-section {
+  margin-bottom: 20px;
+}
+
+.story-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
 /* ── Template grid ─────────────────────────────────────────── */
 .template-grid {
   display: grid;
@@ -334,6 +348,14 @@
 .tmpl-emoji { font-size: 1.8rem; }
 .tmpl-title { font-size: 0.78rem; font-weight: 700; color: var(--text); }
 .tmpl-sub   { font-size: 0.65rem; color: var(--text-2); }
+
+.template-card--wide {
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+}
 
 /* ── Custom textarea ───────────────────────────────────────── */
 .field-label {

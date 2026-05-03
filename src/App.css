@@ -150,7 +150,7 @@
   box-shadow: var(--shadow);
 }
 
-.mt-12 { margin-top: 12px; display: block; }
+.mt-12 { margin-top: 12px; }
 
 /* ── Photo upload ──────────────────────────────────────────── */
 .photo-row {
@@ -301,18 +301,33 @@
   align-items: stretch;
 }
 
-/* ── Story sections ────────────────────────────────────────── */
-.story-section {
-  margin-bottom: 20px;
+/* ── Category tabs ─────────────────────────────────────────── */
+.category-tabs {
+  display: flex;
+  gap: 8px;
 }
 
-.story-section-label {
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.category-tab {
+  flex: 1;
+  padding: 12px 6px;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--card);
   color: var(--text-2);
-  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  line-height: 1.3;
+}
+.category-tab:active { transform: scale(0.97); }
+.category-tab--active {
+  border-color: var(--pink);
+  background: var(--pink-light);
+  color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(233,30,140,0.12);
 }
 
 /* ── Template grid ─────────────────────────────────────────── */
@@ -349,13 +364,6 @@
 .tmpl-title { font-size: 0.78rem; font-weight: 700; color: var(--text); }
 .tmpl-sub   { font-size: 0.65rem; color: var(--text-2); }
 
-.template-card--wide {
-  width: 100%;
-  flex-direction: row;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 16px;
-}
 
 /* ── Custom textarea ───────────────────────────────────────── */
 .field-label {

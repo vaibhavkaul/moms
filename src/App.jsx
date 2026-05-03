@@ -152,7 +152,7 @@ const BOOK_TEMPLATES = [
   },
 ]
 
-const CDN = 'https://moms.kidsartto.life/samples'
+const CDN = '/samples'
 const STYLES = [
   { id: 'cartoon',     label: 'Cartoon',       sub: 'Bold outlines & vivid flat colour',       sample: `${CDN}/style-cartoon.png` },
   { id: 'watercolour', label: 'Watercolour',   sub: 'Soft, dreamy painterly washes',           sample: `${CDN}/style-watercolour.png` },

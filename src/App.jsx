@@ -66,7 +66,7 @@ function isHeic(file) {
 
 // ── Photo upload slot ─────────────────────────────────────────────────────────
 
-function PhotoSlot({ label, emoji, preview, file, inputRef, onPick, name, onName, nameHint }) {
+function PhotoSlot({ label, emoji, preview, file, inputRef, onPick, name, onName, nameHint, showName = true }) {
   return (
     <div className="photo-slot">
       <p className="slot-label">{label}</p>
@@ -100,23 +100,25 @@ function PhotoSlot({ label, emoji, preview, file, inputRef, onPick, name, onName
         style={{ display: 'none' }}
         onChange={e => onPick(e.target.files?.[0])}
       />
-      <input
-        className="name-input"
-        type="text"
-        placeholder={nameHint}
-        value={name}
-        onChange={e => onName(e.target.value)}
-        maxLength={30}
-      />
+      {showName && (
+        <input
+          className="name-input"
+          type="text"
+          placeholder={nameHint}
+          value={name}
+          onChange={e => onName(e.target.value)}
+          maxLength={30}
+        />
+      )}
     </div>
   )
 }
 
 // ── Step: Photos ──────────────────────────────────────────────────────────────
 
-function PhotosStep({ momPreview, momFile, childPreview, childFile, momName, childName,
+function PhotosStep({ momPreview, momFile, childPreview, childFile, childName,
                        momRef, childRef, onPickMom, onPickChild,
-                       onMomName, onChildName, errorMsg, onNext, canNext }) {
+                       onChildName, errorMsg, onNext, canNext }) {
   return (
     <div className="step-wrap">
       <div className="step-header">
@@ -128,7 +130,7 @@ function PhotosStep({ momPreview, momFile, childPreview, childFile, momName, chi
         <PhotoSlot
           label="Mom" emoji="👩" preview={momPreview} file={momFile}
           inputRef={momRef} onPick={onPickMom}
-          name={momName} onName={onMomName} nameHint="Mom's name (optional)"
+          showName={false}
         />
         <PhotoSlot
           label="Child" emoji="🧒" preview={childPreview} file={childFile}
@@ -277,7 +279,7 @@ function GeneratingStep({ statusData, onPanelClick }) {
 
 // ── Step: Result ──────────────────────────────────────────────────────────────
 
-function ResultStep({ statusData, momName, childName, onReset, onPanelClick, jobId }) {
+function ResultStep({ statusData, childName, onReset, onPanelClick, jobId }) {
   const panels = statusData.panels ?? []
   const [copied, setCopied] = useState(false)
 
@@ -310,7 +312,7 @@ return (
         <div className="result-title-row">
           <span className="heart-icon">💝</span>
           <h2>
-            {momName} &amp; {childName}'s<br />
+            {childName}'s<br />
             <span className="title-accent">Mother's Day Comic</span>
           </h2>
           <span className="heart-icon">💝</span>
@@ -428,7 +430,6 @@ export default function App() {
   const [momPreview,   setMomPreview]   = useState(null)
   const [childFile,    setChildFile]    = useState(null)
   const [childPreview, setChildPreview] = useState(null)
-  const [momName,      setMomName]      = useState('')
   const [childName,    setChildName]    = useState('')
 
   // Story
@@ -497,7 +498,7 @@ export default function App() {
     fd.append('story_type',   template)
     fd.append('story_notes',  customNotes)
     fd.append('style',        style)
-    fd.append('mom_name',     momName  || 'Mom')
+    fd.append('mom_name',     'Mom')
     fd.append('child_name',   childName || 'Child')
 
     try {
@@ -526,7 +527,7 @@ export default function App() {
     setJobId(null)
     setMomFile(null);    setMomPreview(null)
     setChildFile(null);  setChildPreview(null)
-    setMomName('');      setChildName('')
+    setChildName('')
     setTemplate(null);   setCustomNotes('');  setStyle('cartoon')
     setStatusData({});   setErrorMsg(null)
   }
@@ -548,10 +549,10 @@ export default function App() {
           <PhotosStep
             momPreview={momPreview}   momFile={momFile}
             childPreview={childPreview} childFile={childFile}
-            momName={momName}         childName={childName}
+            childName={childName}
             momRef={momRef}           childRef={childRef}
             onPickMom={pickMom}       onPickChild={pickChild}
-            onMomName={setMomName}    onChildName={setChildName}
+            onChildName={setChildName}
             errorMsg={errorMsg}
             onNext={() => { setErrorMsg(null); setStep('story') }}
             canNext={canGoToStory}
@@ -574,7 +575,6 @@ export default function App() {
         {step === 'result' && (
           <ResultStep
             statusData={statusData}
-            momName={momName   || 'Mom'}
             childName={childName || 'Child'}
             onReset={handleReset}
             onPanelClick={setLightboxUrl}

@@ -190,7 +190,7 @@ const TEMPLATE_SOURCE = {
 // ── Helper ───────────────────────────────────────────────────────────────────
 
 function isHeic(file) {
-  return file?.name?.toLowerCase().match(/\.heic?$|\.heif?$/)
+  return file?.name?.match(/\.heic$|\.heif$/i)
 }
 
 // ── Photo upload slot ─────────────────────────────────────────────────────────
@@ -282,7 +282,8 @@ function PhotosStep({ momPreview, momFile, childPreview, childFile, childName,
 function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
                       errorMsg, onBack, onNext, canNext }) {
   const getInitialCategory = () => {
-    if (!template || template === 'custom') return 'movies'
+    if (template === 'custom') return 'custom'
+    if (!template) return 'movies'
     if (MOVIE_TEMPLATES.some(t => t.id === template)) return 'movies'
     return 'books'
   }
@@ -290,8 +291,14 @@ function StoryStep({ template, setTemplate, customNotes, setCustomNotes,
 
   function switchCategory(cat) {
     setCategory(cat)
-    if (cat === 'custom') setTemplate('custom')
-    else if (template === 'custom') setTemplate(null)
+    if (cat === 'custom') {
+      setTemplate('custom')
+    } else {
+      // leaving custom — wipe the notes so they don't bleed into template stories
+      if (template === 'custom') setCustomNotes('')
+      // switching between movies/books — clear any cross-category selection
+      setTemplate(null)
+    }
   }
 
   const CATEGORY_TABS = [

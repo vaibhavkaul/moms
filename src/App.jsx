@@ -469,7 +469,7 @@ function GeneratingStep({ statusData, onPanelClick }) {
 
 // ── Step: Result ──────────────────────────────────────────────────────────────
 
-function ResultStep({ statusData, childName, onReset, onPanelClick, jobId }) {
+function ResultStep({ statusData, childName, onReset, jobId }) {
   const panels = statusData.panels ?? []
   const [copied, setCopied] = useState(false)
 
@@ -592,6 +592,8 @@ export default function App() {
     if (!sharedJobId) return
 
     setJobId(sharedJobId)
+    // Intentional mount-time resume from shared URL; not a render cascade.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStep('generating')
 
     fetch(`${API_BASE}/api/comic-status/${sharedJobId}`)
